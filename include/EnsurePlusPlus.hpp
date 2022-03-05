@@ -24,6 +24,7 @@
 #define ENSURE_PLUS_PLUS_HPP
 
 #include <stdexcept>
+#include <exception>
 
 namespace Ensure
 {
@@ -37,6 +38,21 @@ namespace Ensure
         {
         }
     };
+
+    /// Throws an error based on the configured error action.
+    /// @param message The message. 
+    inline void Throw(char const* message)
+    {
+        #if defined(ENSURE_PLUS_PLUS_ON_ERROR_CUSTOM)
+        ENSURE_PLUS_PLUS_ON_ERROR_CUSTOM
+        #elif defined(ENSURE_PLUS_PLUS_ON_ERROR_ABORT)
+        abort();
+        #elif defined(ENSURE_PLUS_PLUS_ON_ERROR_TERMINATE)
+        std::terminate();
+        #else
+        throw EnsureException(message);
+        #endif
+    }
 }
 
 #endif // ENSURE_PLUS_PLUS_HPP
