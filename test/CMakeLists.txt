@@ -16,6 +16,7 @@ enable_testing()
 include_directories(./../include)
 
 add_executable(ensuretests
+    ./EnsureExceptionTests.cpp
     ./AssertionTests.cpp)
 
 target_link_libraries(ensuretests gtest_main)

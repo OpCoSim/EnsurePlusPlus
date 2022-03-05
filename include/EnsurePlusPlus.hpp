@@ -23,9 +23,20 @@
 #ifndef ENSURE_PLUS_PLUS_HPP
 #define ENSURE_PLUS_PLUS_HPP
 
+#include <stdexcept>
+
 namespace Ensure
 {
-    
+    /// The default exception type.
+    struct EnsureException final : std::runtime_error
+    {
+        /// Initializes a new instance of the EnsureException type.
+        /// @param message The error message.
+        explicit EnsureException(char const* message)
+            : std::runtime_error(message)
+        {
+        }
+    };
 }
 
 #endif // ENSURE_PLUS_PLUS_HPP
