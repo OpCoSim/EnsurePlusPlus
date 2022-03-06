@@ -90,7 +90,7 @@ namespace Ensure
         });
     }
 
-    /// Checks whether or not the condition is true.
+    /// Checks whether or not the condition is true, throwing if it is not.
     /// @param condition The condition.
     /// @param message Optionally, a custom error message if the condition is not true.
     inline void Condition(bool const condition, std::string&& message = "Ensured condition was false.")
@@ -99,6 +99,21 @@ namespace Ensure
             if (!condition)
             {
                 Throw(std::move(message));
+            }
+        });
+    }
+
+    /// Ensures the collection is not empty.
+    /// @tparam TStlCollection A type that conforms to STL collection conventions.
+    /// i.e. in this case has the empty() method.
+    /// @param collection The collection.
+    template <typename TStlCollection>
+    inline void IsNotEmpty(TStlCollection& collection)
+    {
+        AssertCore([&]() {
+            if (collection.empty())
+            {
+                Throw("The collection was empty.");
             }
         });
     }
