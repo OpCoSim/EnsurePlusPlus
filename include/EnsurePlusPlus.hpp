@@ -28,6 +28,12 @@
 
 namespace Ensure
 {
+    #ifdef ENSURE_PLUS_PLUS_DISABLE_ASSERTS
+    inline bool constexpr Enabled = false;
+    #else
+    inline bool constexpr Enabled = true;
+    #endif
+
     /// The default exception type.
     struct EnsureException final : std::runtime_error
     {
@@ -52,6 +58,19 @@ namespace Ensure
         #else
         throw EnsureException(message);
         #endif
+    }
+
+    /// The root of all assertion calls. Calls the given assertion
+    /// when assertions are enabled.
+    /// @tparam F The type of the assertion function.
+    /// @param assertion The assertion.
+    template <typename F>
+    inline void AssertCore(F&& assertion)
+    {
+        if constexpr (Enabled)
+        {
+            assertion();
+        }
     }
 }
 
