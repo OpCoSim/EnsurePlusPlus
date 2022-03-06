@@ -29,8 +29,10 @@
 namespace Ensure
 {
     #ifdef ENSURE_PLUS_PLUS_DISABLE_ASSERTS
+    /// Whether or not assertions are enabled.
     inline bool constexpr Enabled = false;
     #else
+    /// Whether or not assertions are enabled.
     inline bool constexpr Enabled = true;
     #endif
 
@@ -39,7 +41,7 @@ namespace Ensure
     {
         /// Initializes a new instance of the EnsureException type.
         /// @param message The error message.
-        explicit EnsureException(char const* message)
+        explicit EnsureException(std::string&& message)
             : std::runtime_error(message)
         {
         }
@@ -47,7 +49,7 @@ namespace Ensure
 
     /// Throws an error based on the configured error action.
     /// @param message The message. 
-    inline void Throw(char const* message)
+    inline void Throw(std::string&& message)
     {
         #if defined(ENSURE_PLUS_PLUS_ON_ERROR_CUSTOM)
         ENSURE_PLUS_PLUS_ON_ERROR_CUSTOM
@@ -56,7 +58,7 @@ namespace Ensure
         #elif defined(ENSURE_PLUS_PLUS_ON_ERROR_TERMINATE)
         std::terminate();
         #else
-        throw EnsureException(message);
+        throw EnsureException(std::move(message));
         #endif
     }
 
@@ -71,6 +73,21 @@ namespace Ensure
         {
             assertion();
         }
+    }
+
+    /// Asserts that the pointer is not null.
+    /// @tparam T The pointer.
+    /// @param pointer The pointer.
+    /// @param name A user friendly name for the pointer.
+    template <typename T>
+    inline void IsNotNullptr(T pointer, std::string&& name)
+    {
+        AssertCore([&]() {
+            if (pointer == nullptr)
+            {
+                Throw(std::string("Pointer was null - ") + name);
+            }
+        });
     }
 }
 
