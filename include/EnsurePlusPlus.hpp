@@ -29,10 +29,10 @@
 namespace Ensure
 {
     #ifdef ENSURE_PLUS_PLUS_DISABLE_ASSERTS
-    /// Whether or not assertions are enabled.
+    /// Assertions are disabled.
     inline bool constexpr Enabled = false;
     #else
-    /// Whether or not assertions are enabled.
+    /// Assertions are enabled.
     inline bool constexpr Enabled = true;
     #endif
 
@@ -86,6 +86,19 @@ namespace Ensure
             if (pointer == nullptr)
             {
                 Throw(std::string("Pointer was null - ") + name);
+            }
+        });
+    }
+
+    /// Checks whether or not the condition is true.
+    /// @param condition The condition.
+    /// @param message Optionally, a custom error message if the condition is not true.
+    inline void Condition(bool const condition, std::string&& message = "Ensured condition was false.")
+    {
+        AssertCore([&]() {
+            if (!condition)
+            {
+                Throw(std::move(message));
             }
         });
     }
