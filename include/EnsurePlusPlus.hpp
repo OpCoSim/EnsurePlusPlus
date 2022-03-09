@@ -117,6 +117,47 @@ namespace Ensure
             }
         });
     }
+
+    /// Ensure two elements are equal using the == operator.
+    /// @tparam TLeft The type of the left hand operand.
+    /// @tparam TRight The type of the right hand operand.
+    /// @param left The left hand operand.
+    /// @param right The right hand operand.
+    template <typename TLeft, typename TRight>
+    inline void Equal(TLeft left, TRight right)
+    {
+        AssertCore([&]() {
+            if (!(left == right))
+            {
+                Throw("Asserted values were not equal.");
+            }
+        });
+    }
+
+    /// Compares two STL style containers element-wise using indexers.
+    /// @tparam TStlLeft The type of the left hand operand.
+    /// @tparam TStlRight The type of the right hand operand.
+    /// @param left The left hand operand.
+    /// @param right The right hand operand.
+    template <typename TStlLeft, typename TStlRight>
+    inline void SequenceEquals(TStlLeft left, TStlRight right)
+    {
+        AssertCore([&]() {
+            if (left.size() != right.size())
+            {
+                Throw("Containers are different sizes.");
+            }
+
+            for (typename TStlLeft::size_type i = 0; i < left.size(); ++i)
+            {
+                if (!(left[i] == right[i]))
+                {
+                    Throw("Elements at position " + std::to_string(i) + " were not equal.");
+                }
+            }
+        });
+    }
 }
 
 #endif // ENSURE_PLUS_PLUS_HPP
+
